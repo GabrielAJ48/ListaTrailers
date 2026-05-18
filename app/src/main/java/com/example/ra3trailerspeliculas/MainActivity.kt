@@ -1,0 +1,29 @@
+package com.example.ra3trailerspeliculas
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.ra3trailerspeliculas.navegacion.NavigationController
+import com.example.ra3trailerspeliculas.ui.theme.RA3TrailersPeliculasTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            NavigationController()
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    RA3TrailersPeliculasTheme {
+
+    }
+}
