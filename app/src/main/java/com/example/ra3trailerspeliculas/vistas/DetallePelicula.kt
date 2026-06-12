@@ -38,10 +38,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.ra3trailerspeliculas.modelo.Pelicula
 import com.example.ra3trailerspeliculas.fuentes.Fuentes
+import com.example.ra3trailerspeliculas.viewmodel.SoundPoolViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetallePelicula(pelicula: Pelicula, onBack: () -> Unit, onVerTrailer: (Int) -> Unit) {
+fun DetallePelicula(
+    pelicula: Pelicula,
+    soundViewModel: SoundPoolViewModel,
+    onBack: () -> Unit,
+    onVerTrailer: (Int) -> Unit
+) {
     var sinopsisExpandida by remember { mutableStateOf(false) }
 
     val fondoPrincipal = Color(0xFF141414)
@@ -62,7 +68,12 @@ fun DetallePelicula(pelicula: Pelicula, onBack: () -> Unit, onVerTrailer: (Int) 
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(
+                        onClick = {
+                            soundViewModel.playSound(SoundPoolViewModel.Sonido.CLICK)
+                            onBack()
+                        }
+                    ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atrás")
                     }
                 },
@@ -120,7 +131,10 @@ fun DetallePelicula(pelicula: Pelicula, onBack: () -> Unit, onVerTrailer: (Int) 
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
                     .background(fondoTarjeta)
-                    .clickable { sinopsisExpandida = !sinopsisExpandida }
+                    .clickable {
+                        soundViewModel.playSound(SoundPoolViewModel.Sonido.EXPANDIR)
+                        sinopsisExpandida = !sinopsisExpandida
+                    }
                     .padding(12.dp)
                     .animateContentSize()
             )
@@ -128,7 +142,10 @@ fun DetallePelicula(pelicula: Pelicula, onBack: () -> Unit, onVerTrailer: (Int) 
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = { onVerTrailer(pelicula.id) },
+                onClick = {
+                    soundViewModel.playSound(SoundPoolViewModel.Sonido.PLAY)
+                    onVerTrailer(pelicula.id)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),

@@ -20,9 +20,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.ra3trailerspeliculas.modelo.Pelicula
 import com.example.ra3trailerspeliculas.fuentes.Fuentes
+import com.example.ra3trailerspeliculas.viewmodel.SoundPoolViewModel
 
 @Composable
-fun TarjetaPelicula(pelicula: Pelicula, onClick: () -> Unit) {
+fun TarjetaPelicula(
+    pelicula: Pelicula,
+    soundViewModel: SoundPoolViewModel,
+    onClick: () -> Unit
+) {
     val fondoTarjeta = Color(0xFF222222)
     val textoClaro = Color(0xFFFFFFFF)
     val textoSecundario = Color(0xFFB0B0B0)
@@ -30,7 +35,10 @@ fun TarjetaPelicula(pelicula: Pelicula, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .clickable {
+                soundViewModel.playSound(SoundPoolViewModel.Sonido.CLICK)
+                onClick()
+            },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.cardColors(containerColor = fondoTarjeta)

@@ -1,6 +1,7 @@
 package com.example.ra3trailerspeliculas.navegacion
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -11,14 +12,22 @@ import com.example.ra3trailerspeliculas.vistas.DetallePelicula
 import com.example.ra3trailerspeliculas.vistas.ListaPeliculasScreen
 import com.example.ra3trailerspeliculas.viewmodel.PeliculasViewModel
 import com.example.ra3trailerspeliculas.vistas.ReproductorVideo
+import com.example.ra3trailerspeliculas.viewmodel.SoundPoolViewModel
 
 @Composable
-fun NavigationController(viewModel: PeliculasViewModel = viewModel()) {
+fun NavigationController(
+    viewModel: PeliculasViewModel = viewModel(),
+    soundViewModel: SoundPoolViewModel = viewModel()
+) {
     val navController = rememberNavController()
+
+    LaunchedEffect(Unit) {
+        soundViewModel.loadSounds()
+    }
 
     NavHost(navController = navController, startDestination = Screen.ListaPeliculas.route) {
         composable(route = Screen.ListaPeliculas.route) {
-            ListaPeliculasScreen(viewModel) { peliculaId ->
+            ListaPeliculasScreen(viewModel, soundViewModel) { peliculaId ->
                 navController.navigate(route = Screen.DetallePelicula.createRoute(peliculaId))
             }
         }
@@ -35,6 +44,7 @@ fun NavigationController(viewModel: PeliculasViewModel = viewModel()) {
             if (pelicula != null) {
                 DetallePelicula(
                     pelicula = pelicula,
+                    soundViewModel = soundViewModel,
                     onBack = { navController.popBackStack() },
                     onVerTrailer = { id -> navController.navigate(route = Screen.ReproducirPelicula.createRoute(peliculaId)) }
                 )
@@ -49,7 +59,11 @@ fun NavigationController(viewModel: PeliculasViewModel = viewModel()) {
             val pelicula = viewModel.obtenerPeliculaPorId(peliculaId)
 
             if (pelicula != null) {
-                ReproductorVideo(pelicula = pelicula, onBack = { navController.popBackStack() })
+                ReproductorVideo(
+                    pelicula = pelicula,
+                    soundViewModel = soundViewModel,
+                    onBack = { navController.popBackStack() }
+                )
             }
         }
     }

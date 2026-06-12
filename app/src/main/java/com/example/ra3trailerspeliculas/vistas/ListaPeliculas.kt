@@ -1,5 +1,8 @@
 package com.example.ra3trailerspeliculas.vistas
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,8 +23,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -31,12 +38,18 @@ import androidx.compose.ui.unit.dp
 import com.example.ra3trailerspeliculas.R
 import com.example.ra3trailerspeliculas.fuentes.Fuentes
 import com.example.ra3trailerspeliculas.viewmodel.PeliculasViewModel
+import com.example.ra3trailerspeliculas.viewmodel.SoundPoolViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListaPeliculasScreen(viewModel: PeliculasViewModel, onPeliculaClick: (Int) -> Unit) {
+fun ListaPeliculasScreen(
+    viewModel: PeliculasViewModel,
+    soundViewModel: SoundPoolViewModel,
+    onPeliculaClick: (Int) -> Unit
+) {
 
     val peliculas by viewModel.peliculas.collectAsState()
+    var mostrarLista by remember { mutableStateOf(false) }
 
     val fondoPrincipal = Color(0xFF141414)
     val textoClaro = Color(0xFFFFFFFF)
@@ -59,19 +72,20 @@ fun ListaPeliculasScreen(viewModel: PeliculasViewModel, onPeliculaClick: (Int) -
             )
         }
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(peliculas) { pelicula ->
-                TarjetaPelicula(
-                    pelicula = pelicula,
-                    onClick = { onPeliculaClick(pelicula.id) }
-                )
+            LazyColumn(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(peliculas) { pelicula ->
+                    TarjetaPelicula(
+                        pelicula = pelicula,
+                        soundViewModel = soundViewModel,
+                        onClick = { onPeliculaClick(pelicula.id) }
+                    )
+                }
             }
-        }
     }
 }

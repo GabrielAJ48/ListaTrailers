@@ -37,10 +37,15 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import com.example.ra3trailerspeliculas.fuentes.Fuentes
 import com.example.ra3trailerspeliculas.modelo.Pelicula
+import com.example.ra3trailerspeliculas.viewmodel.SoundPoolViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReproductorVideo(pelicula: Pelicula, onBack: () -> Unit) {
+fun ReproductorVideo(
+    pelicula: Pelicula,
+    soundViewModel: SoundPoolViewModel,
+    onBack: () -> Unit
+) {
     var isLoading by remember { mutableStateOf(true) }
     val context = LocalContext.current
 
@@ -84,7 +89,12 @@ fun ReproductorVideo(pelicula: Pelicula, onBack: () -> Unit) {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(
+                        onClick = {
+                            soundViewModel.playSound(SoundPoolViewModel.Sonido.CLICK)
+                            onBack()
+                        }
+                    ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atrás", tint = textoClaro)
                     }
                 },
